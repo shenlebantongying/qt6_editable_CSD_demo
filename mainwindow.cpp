@@ -64,31 +64,39 @@ MainWindow::MainWindow(QWidget *parent)
 }
 
 bool MainWindow::event(QEvent *event) {
-  if (event->type() == QEvent::HoverMove) {
-    auto p = dynamic_cast<QHoverEvent *>(event)->position();
 
-    if  (((p.x() > width() - border) or (p.x() < border))
-      and
-        (p.y() > headbar->height()))
-    {
-      this->setCursor(Qt::SizeHorCursor);
-    } else if (p.y() > height() - border) {
-      this->setCursor(Qt::SizeVerCursor);
-    } else {
-      this->setCursor(Qt::ArrowCursor);
-    }
+  // When hove to edge, change cursor
+  if (event->type() == QEvent::HoverMove) {
+      auto p = dynamic_cast<QHoverEvent *>(event)->position();
+
+      if (p.y()>height()-border){
+          if (p.x() < border){
+            this->setCursor(Qt::SizeBDiagCursor);
+          } else if (p.x() > width()-border){
+            this->setCursor(Qt::SizeFDiagCursor);
+          } else {
+            this->setCursor(Qt::SizeVerCursor);
+          }
+      } else if ((p.y() > headbar->height())
+                  and
+                (((p.x() > width() - border) or (p.x() < border)))){
+            this->setCursor(Qt::SizeHorCursor);
+      } else {
+        setCursor(Qt::ArrowCursor);
+      }
+  // if user press
   } else if (event->type() == QEvent::MouseButtonPress) {
-    auto p = dynamic_cast<QMouseEvent *>(event)->position();
-    Qt::Edges edges;
-    if (p.x() > width() - border)
-      edges |= Qt::RightEdge;
-    if (p.x() < border)
-      edges |= Qt::LeftEdge;
-    if (p.y() > height() - border)
-      edges |= Qt::BottomEdge;
-    if (edges != 0) {
-      this->windowHandle()->startSystemResize(edges);
-    }
+      auto p = dynamic_cast<QMouseEvent *>(event)->position();
+      Qt::Edges edges;
+      if (p.x() > width() - border)
+        edges |= Qt::RightEdge;
+      if (p.x() < border)
+        edges |= Qt::LeftEdge;
+      if (p.y() > height() - border)
+        edges |= Qt::BottomEdge;
+      if (edges != 0) {
+        this->windowHandle()->startSystemResize(edges);
+      }
   }
   // TODO: what does this mean?
   return QMainWindow::event(event);
