@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include "HeadBar.h"
+#include "HeadBarEdit.h"
 #include <QLabel>
 #include <QMainWindow>
 #include <QToolButton>
@@ -24,5 +25,9 @@ public:
 
     void paintEvent(QPaintEvent *event) override;
     bool event(QEvent *event) override;
+
+    void dropEvent(QDropEvent *p_event) override;
+    void dragEnterEvent(QDragEnterEvent *p_event) override;
+    void dragMoveEvent(QDragMoveEvent *p_event) override;
 };
 #endif // MAINWINDOW_H

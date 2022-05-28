@@ -19,6 +19,8 @@ set(PROJECT_SOURCES
         mainwindow.h
         HeadBar.h
         HeadBar.cpp
+        HeadBarEdit.h
+        HeadBarEdit.cpp
 )
 
 qt_add_executable(CSD_qt

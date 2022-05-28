@@ -15,6 +15,8 @@ MainWindow::MainWindow(QWidget *parent)
    setWindowFlag(Qt::FramelessWindowHint);
    resize(600,400);
 
+   setAcceptDrops(true);
+
    setContentsMargins(w,w,w,w);
    headbar = new HeadBar();
 
@@ -50,7 +52,7 @@ MainWindow::MainWindow(QWidget *parent)
    headbar->addWidget(title);
 
 // a btn on right;
-  auto r_btn = new QPushButton("What?");
+  auto r_btn = new QPushButton("Edit ToolBar");
   headbar->addWidget(r_btn);
 
 //
@@ -61,6 +63,13 @@ MainWindow::MainWindow(QWidget *parent)
               this->windowHandle()->startSystemMove();
            });
 
+// Toolbar editor
+   auto headBarEdit = new HeadBarEdit(this);
+
+   connect(r_btn,&QPushButton::clicked,
+           [=,this]{
+             headBarEdit->show();
+           });
 }
 
 bool MainWindow::event(QEvent *event) {
@@ -112,4 +121,23 @@ void MainWindow::paintEvent(QPaintEvent *event) {
   QPainter p(this);
   p.setPen(*pen);
   p.drawRect(this->rect());
+}
+
+
+void MainWindow::dragEnterEvent(QDragEnterEvent *p_event)
+{
+  qDebug()<<"MainWindow"<<"dragEnterEvent";
+
+  p_event->acceptProposedAction();
+}
+
+void MainWindow::dragMoveEvent(QDragMoveEvent *p_event)
+{
+
+  p_event->acceptProposedAction();
+}
+
+void MainWindow::dropEvent(QDropEvent *p_event)
+{
+  p_event->acceptProposedAction();
 }
