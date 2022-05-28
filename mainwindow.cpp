@@ -5,8 +5,8 @@
 #include <QWindow>
 #include <QSizePolicy>
 #include <QPushButton>
-
 constexpr qreal border = 15;
+constexpr int w = 1;
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -15,7 +15,11 @@ MainWindow::MainWindow(QWidget *parent)
    setWindowFlag(Qt::FramelessWindowHint);
    resize(600,400);
 
+   setContentsMargins(w,w,w,w);
    headbar = new HeadBar();
+
+// Enable hove move event
+   setAttribute(Qt::WA_Hover);
 
 // close, fullscreen, and close
    close = new QToolButton();
@@ -59,24 +63,45 @@ MainWindow::MainWindow(QWidget *parent)
 
 }
 
-void MainWindow::mousePressEvent(QMouseEvent *event){
-  resize_q(event->position());
-}
+bool MainWindow::event(QEvent *event) {
+  if (event->type() == QEvent::HoverMove) {
+    auto p = dynamic_cast<QHoverEvent *>(event)->position();
 
-void MainWindow::resize_q(const QPointF &p)
-{
-  Qt::Edges edges;
-  if (p.x() > width() - border)
-    edges |= Qt::RightEdge;
-  if (p.x() < border)
-    edges |= Qt::LeftEdge;
-  if (p.y() > height() - border)
-    edges |= Qt::BottomEdge;
-  if (edges != 0) {
-    this->windowHandle()->startSystemResize(edges);
+    if  (((p.x() > width() - border) or (p.x() < border))
+      and
+        (p.y() > headbar->height()))
+    {
+      this->setCursor(Qt::SizeHorCursor);
+    } else if (p.y() > height() - border) {
+      this->setCursor(Qt::SizeVerCursor);
+    } else {
+      this->setCursor(Qt::ArrowCursor);
+    }
+  } else if (event->type() == QEvent::MouseButtonPress) {
+    auto p = dynamic_cast<QMouseEvent *>(event)->position();
+    Qt::Edges edges;
+    if (p.x() > width() - border)
+      edges |= Qt::RightEdge;
+    if (p.x() < border)
+      edges |= Qt::LeftEdge;
+    if (p.y() > height() - border)
+      edges |= Qt::BottomEdge;
+    if (edges != 0) {
+      this->windowHandle()->startSystemResize(edges);
+    }
   }
+  // TODO: what does this mean?
+  return QMainWindow::event(event);
 }
 
 MainWindow::~MainWindow()
 = default;
 
+void MainWindow::paintEvent(QPaintEvent *event) {
+  auto pen = new QPen();
+  pen->setWidth(w*2);
+  pen->setColor(Qt::lightGray);
+  QPainter p(this);
+  p.setPen(*pen);
+  p.drawRect(this->rect());
+}

@@ -5,6 +5,8 @@
 #include <QLabel>
 #include <QMainWindow>
 #include <QToolButton>
+#include <QHoverEvent>
+#include <QMouseEvent>
 
 class MainWindow : public QMainWindow
 {
@@ -19,7 +21,8 @@ public:
     QToolButton * minimize;
 
     ~MainWindow();
-    void mousePressEvent(QMouseEvent *event) override;
-    void resize_q(const QPointF &p);
+
+    void paintEvent(QPaintEvent *event) override;
+    bool event(QEvent *event) override;
 };
 #endif // MAINWINDOW_H
