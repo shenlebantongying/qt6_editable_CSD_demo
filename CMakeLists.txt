@@ -36,6 +36,4 @@ set_target_properties(CSD_qt PROPERTIES
     WIN32_EXECUTABLE TRUE
 )
 
-if(QT_VERSION_MAJOR EQUAL 6)
-    qt_finalize_executable(CSD_qt)
-endif()
+qt_finalize_executable(CSD_qt)
