@@ -19,6 +19,8 @@ set(PROJECT_SOURCES
         mainwindow.h
         HeadBar.h
         HeadBar.cpp
+        ListWidget.h
+        ListWidget.cpp
         HeadBarEdit.h
         HeadBarEdit.cpp
 )

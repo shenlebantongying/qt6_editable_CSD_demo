@@ -31,10 +31,10 @@ void HeadBar::dragMoveEvent(QDragMoveEvent *p_event) {
   p_event->acceptProposedAction();
 }
 
-
 void HeadBar::dropEvent(QDropEvent *event)
 {
-    qDebug()<< "GOT" << event->mimeData()->text();
+    auto name = event->mimeData()->text();
+    addToolBtn(new QAction(QIcon::fromTheme(name.toLower()),name));
     event->accept();
 }
 

@@ -4,46 +4,28 @@
 #include <QMouseEvent>
 #include <QMimeData>
 #include <QSizePolicy>
+#include <QPushButton>
+#include <QListWidgetItem>
 
 HeadBarEdit::HeadBarEdit(QWidget *parent, Qt::WindowFlags f)
     : QDialog(parent, f)
 {
-    // settings
 
     auto m_layout = new QVBoxLayout();
-    setLayout(m_layout);
+    auto m_listview = new ListWidget();
 
-    auto a_label = new QLabel("LONG_TEXT",this);
-    a_label->setStyleSheet("border: 1px solid black");
+    setLayout(m_layout);
+    m_layout->addWidget(m_listview);
+
+
+    auto a_toolBtn = new QToolButton();
+    a_toolBtn->setDefaultAction(new QAction(QIcon::fromTheme("kde"),"custom_act"));
+
+    // TODO: to support actions, you have to subclass QListWidgetItem and add something to carry a QAction?
+    m_listview->addItem(new QListWidgetItem(QIcon::fromTheme("kde"),"KDE"));
+    m_listview->addItem(new QListWidgetItem(QIcon::fromTheme("okular"),"Okular"));
 
     setMinimumSize(400, qMax(200, y()));
 
     setAcceptDrops(true);
 }
-
-void HeadBarEdit::mousePressEvent(QMouseEvent *event) {
-  if (event->button() == Qt::LeftButton
-      && this->childAt(event->pos())){
-
-  auto label_widget = dynamic_cast<QLabel*>(this->childAt(event->pos()));
-
-  auto *drag = new QDrag(this);
-
-  auto mimeData = new QMimeData();
-  mimeData->setText(label_widget->text());
-  drag->setMimeData(mimeData);
-  drag->setDragCursor(label_widget->grab(),Qt::MoveAction);
-
-  Qt::DropAction dropAction = drag->exec( Qt::MoveAction, Qt::MoveAction);
-
-  if (dropAction == Qt::MoveAction)
-    label_widget->close();
-  }
-}
-
-void HeadBarEdit::dragEnterEvent(QDragEnterEvent *event) {
-  qDebug()<<"HeadBarEit"<<"dragEnterEvent";
-  event->acceptProposedAction();
-}
-
-
