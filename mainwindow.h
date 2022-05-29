@@ -17,9 +17,7 @@ public:
     MainWindow(QWidget *parent = nullptr);
 
     HeadBar * headbar;
-    QToolButton * close;
-    QToolButton * fullscreen;
-    QToolButton * minimize;
+
 
     ~MainWindow();
 

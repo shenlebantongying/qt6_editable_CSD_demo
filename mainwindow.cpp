@@ -5,6 +5,8 @@
 #include <QWindow>
 #include <QSizePolicy>
 #include <QPushButton>
+#include <QAction>
+
 constexpr qreal border = 15;
 constexpr int w = 1;
 
@@ -18,58 +20,50 @@ MainWindow::MainWindow(QWidget *parent)
    setAcceptDrops(true);
 
    setContentsMargins(w,w,w,w);
-   headbar = new HeadBar();
+   headbar = new HeadBar(this);
 
-// Enable hove move event
+
+   // if the headbar request win_move (which will be emitted by mouse click event)
+   connect(headbar,&HeadBar::request_move_window,
+           [=,this]{
+             this->windowHandle()->startSystemMove();
+           });
+
+// Enable hove move event -> to change cursor when near window boarder.
    setAttribute(Qt::WA_Hover);
 
 // close, fullscreen, and close
-   close = new QToolButton();
-   auto * close_a = new QAction(QIcon::fromTheme("window-close"),"Close",this);
-   close->setDefaultAction(close_a);
-   headbar->addWidget(close);
-   connect(close_a,&QAction::triggered,
+
+   auto close_ac = headbar->addToolBtn(new QAction(QIcon::fromTheme("window-close"),"Close"));
+   connect(close_ac,&QAction::triggered,
            [=,this](){QApplication::quit();});
 
-   fullscreen = new QToolButton();
-   auto * max_a = new QAction(QIcon::fromTheme("window-maximize"),"Maximize",this);
-   fullscreen->setDefaultAction(max_a);
-   headbar->addWidget(fullscreen);
-   connect(max_a,&QAction::triggered,
-           [=,this](){ setWindowState(Qt::WindowMaximized);});
+   auto fullscreen_ac = headbar->addToolBtn(new QAction(QIcon::fromTheme("window-maximize"),("fullscreen")));
+   connect(fullscreen_ac,&QAction::triggered,
+            [=,this]{
+              qDebug()<<"what";
+             if(windowState() == Qt::WindowMaximized){
+               setWindowState(Qt::WindowNoState);
+             } else {
+               setWindowState(Qt::WindowMaximized);
+             }});
 
-   minimize = new QToolButton();
-   auto * mini_a = new QAction(QIcon::fromTheme("window-minimize"),"Minimize",this);
-   minimize->setDefaultAction(mini_a);
-   headbar->addWidget(minimize);
-   connect(mini_a,&QAction::triggered,
+   auto minimize_ac = headbar->addToolBtn(new QAction(QIcon::fromTheme("window-minimize"),"Minimize"));
+   connect(minimize_ac,&QAction::triggered,
            [=,this](){ setWindowState(Qt::WindowMinimized);});
-
-// titlebar in middle
-   auto title = new QLabel("CSD style window written in Qt");
-   title->setAlignment(Qt::AlignCenter);
-   title->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Expanding);
-   headbar->addWidget(title);
-
-// a btn on right;
-  auto r_btn = new QPushButton("Edit ToolBar");
-  headbar->addWidget(r_btn);
-
-//
-   addToolBar(headbar);
-
-   connect(headbar,&HeadBar::request_move_window,
-           [=,this]{
-              this->windowHandle()->startSystemMove();
-           });
 
 // Toolbar editor
    auto headBarEdit = new HeadBarEdit(this);
 
-   connect(r_btn,&QPushButton::clicked,
+   auto toolbarEditor_ac = headbar->addToolBtn(new QAction(QIcon::fromTheme("entry-edit"),"ToolbarEdit"));
+
+   connect(toolbarEditor_ac,&QAction::triggered,
            [=,this]{
              headBarEdit->show();
            });
+
+   addToolBar(headbar);
+
 }
 
 bool MainWindow::event(QEvent *event) {

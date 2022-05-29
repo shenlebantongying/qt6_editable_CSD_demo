@@ -4,6 +4,7 @@
 #include "HeadBar.h"
 #include <QDialog>
 #include <QDrag>
+#include <QToolButton>
 
 class HeadBarEdit : public QDialog
 {

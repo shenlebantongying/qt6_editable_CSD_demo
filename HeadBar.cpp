@@ -2,7 +2,8 @@
 #include <QMouseEvent>
 #include <QMimeData>
 
-HeadBar::HeadBar()
+HeadBar::HeadBar(QWidget *parent)
+  : QToolBar(parent)
 {
   setMovable(false);
   setFloatable(false);
@@ -37,3 +38,16 @@ void HeadBar::dropEvent(QDropEvent *event)
     event->accept();
 }
 
+QAction * HeadBar::addToolBtn(QAction * action){
+  auto tempBtn= new QToolButton();
+
+  // Is it a bug or my understanding not enough?
+  // After setting default action for QToolButton, the text will be lost.
+  // Thus, we force set it here.
+  tempBtn->setDefaultAction(action);
+  tempBtn->defaultAction()->setText(action->text());
+
+  this->addWidget(tempBtn);
+
+  return tempBtn->defaultAction();
+}
