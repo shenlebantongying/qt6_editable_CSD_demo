@@ -15,14 +15,10 @@ find_package(Qt6 REQUIRED COMPONENTS Widgets)
 
 set(PROJECT_SOURCES
         main.cpp
-        mainwindow.cpp
-        mainwindow.h
-        HeadBar.h
-        HeadBar.cpp
-        ListWidget.h
-        ListWidget.cpp
-        HeadBarEdit.h
-        HeadBarEdit.cpp
+        mainwindow.h mainwindow.cpp
+        HeadBar.h HeadBar.cpp
+        ListWidget.h ListWidget.cpp
+        HeadBarEdit.h HeadBarEdit.cpp
 )
 
 qt_add_executable(CSD_qt

@@ -27,7 +27,7 @@ void ListWidget::mousePressEvent(QMouseEvent *event) {
     auto mimeData = new QMimeData();
 
     // TODO: Note: This is the icon name we are passing.
-    mimeData->setText(listWidgetItem->text());
+    mimeData->setText(listWidgetItem->icon().name()+";"+listWidgetItem->text());
     drag->setMimeData(mimeData);
     drag->setDragCursor(listWidgetItem->icon().pixmap(22, 22), Qt::MoveAction);
 

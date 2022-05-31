@@ -11,6 +11,7 @@ HeadBar::HeadBar(QWidget *parent)
   setAcceptDrops(true);
 
   setContextMenuPolicy(Qt::PreventContextMenu);
+
 }
 
 bool HeadBar::event(QEvent *event){
@@ -33,8 +34,31 @@ void HeadBar::dragMoveEvent(QDragMoveEvent *p_event) {
 
 void HeadBar::dropEvent(QDropEvent *event)
 {
-    auto name = event->mimeData()->text();
-    addToolBtn(new QAction(QIcon::fromTheme(name.toLower()),name));
+    // format string: iconname;text
+
+    auto dataStrings = event->mimeData()->text().split(";");
+    auto act_icon = dataStrings.first();
+    auto act_name = dataStrings.at(1);
+
+    auto tempBtn = new QToolButton;
+
+    tempBtn->setDefaultAction(new QAction(QIcon::fromTheme(act_icon),act_name));
+
+    if (act_name == "kde"){
+        connect(tempBtn->defaultAction(),&QAction::triggered,
+                [=,this]{
+                  qDebug()<<"kde_pressed";
+                });
+    } else if (act_name == "okular") {
+      connect(tempBtn->defaultAction(),&QAction::triggered,
+              [=,this]{
+                qDebug()<<"okular pressed";
+              });
+    }
+
+
+    addWidget(tempBtn);
+
     event->accept();
 }
 

@@ -5,6 +5,7 @@
 #include <QEvent>
 #include <QWindow>
 #include <QToolButton>
+
 class HeadBar : public QToolBar
 {
     Q_OBJECT
