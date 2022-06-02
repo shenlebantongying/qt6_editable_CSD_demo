@@ -41,7 +41,6 @@ MainWindow::MainWindow(QWidget *parent)
    auto fullscreen_ac = headbar->addToolBtn(new QAction(QIcon::fromTheme("window-maximize"),("fullscreen")));
    connect(fullscreen_ac,&QAction::triggered,
             [=,this]{
-              qDebug()<<"what";
              if(windowState() == Qt::WindowMaximized){
                setWindowState(Qt::WindowNoState);
              } else {
@@ -70,7 +69,7 @@ bool MainWindow::event(QEvent *event) {
 
   // When hove to edge, change cursor
   if (event->type() == QEvent::HoverMove) {
-      auto p = dynamic_cast<QHoverEvent *>(event)->position();
+      auto p = dynamic_cast<QHoverEvent *>(event)->pos();
 
       if (p.y()>height()-border){
           if (p.x() < border){
@@ -89,7 +88,7 @@ bool MainWindow::event(QEvent *event) {
       }
   // if user press
   } else if (event->type() == QEvent::MouseButtonPress) {
-      auto p = dynamic_cast<QMouseEvent *>(event)->position();
+      auto p = dynamic_cast<QMouseEvent *>(event)->pos();
       Qt::Edges edges;
       if (p.x() > width() - border)
         edges |= Qt::RightEdge;
@@ -121,7 +120,6 @@ void MainWindow::paintEvent(QPaintEvent *event) {
 
 void MainWindow::dragEnterEvent(QDragEnterEvent *p_event)
 {
-  qDebug()<<"MainWindow"<<"dragEnterEvent";
 
   p_event->acceptProposedAction();
 }

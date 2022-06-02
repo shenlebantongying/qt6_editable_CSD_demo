@@ -1,6 +1,7 @@
 #include "HeadBar.h"
 #include <QMouseEvent>
 #include <QMimeData>
+#include <QDebug>
 
 HeadBar::HeadBar(QWidget *parent)
   : QToolBar(parent)
@@ -24,7 +25,6 @@ bool HeadBar::event(QEvent *event){
 
 void HeadBar::dragEnterEvent(QDragEnterEvent *event)
 {
-    qDebug()<< "HeadBar" << "dragEnterEvent";
     event->acceptProposedAction();
 }
 

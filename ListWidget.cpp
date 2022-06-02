@@ -22,7 +22,7 @@ void ListWidget::mousePressEvent(QMouseEvent *event) {
     auto listWidgetItem =
         dynamic_cast<QListWidgetItem *>(this->itemAt(event->pos()));
 
-    auto *drag = new QDrag(this);
+    QDrag *drag = new QDrag(this);
 
     auto mimeData = new QMimeData();
 
